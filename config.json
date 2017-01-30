@@ -7,6 +7,6 @@
     "serverName" : "FOnline 2 Discord Community",
     "textChannelName" : "Your text channel name here (without #)",
     "voiceChannelName" : "AFK",
-    "aliasesFile" = "aliases.json"
+    "aliasesFile" : "aliases.json"
 }
 
