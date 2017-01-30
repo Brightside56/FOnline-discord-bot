@@ -16,13 +16,16 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const ytdl = require("ytdl-core");
+const moment = require('moment');
+const namesarray = require('unique-random-array');
 
 const bot = new Discord.Client({autoReconnect: true, max_message_cache: 0});
 
 var config = require('./config.json');
 
-const dm_text = "Hey there! Use !commands on a public chat room to see the command list.";
+const dm_text = "Hey there! Use !commands on a " + config.textChannelName + " chat room to see the command list.";
 const mention_text = "Use !commands to see the command list.";
+
 var aliases_file_path = "aliases.json";
 
 var stopped = false;
@@ -35,6 +38,25 @@ var aliases = {};
 var voice_connection = null;
 var voice_handler = null;
 var text_channel = null;
+
+var buff = new Buffer([0xFF, 0xFF, 0xFF, 0xFF]);
+var net = require('net');
+var Math = require('math');
+var buffer = new Buffer(0, 'hex');
+
+var online = '';
+var uptime = '';
+
+var botToken = config.botToken;
+var serverName = config.serverName;
+var textChannelName = config.textChannelName;
+var voiceChannelName = config.voiceChannelName;
+var aliasesFile = config.aliasesFile;
+
+// var game = {};
+// game['name'] = "!help";
+// game['type'] = 0;
+// game['url'] = "";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -366,7 +388,7 @@ function get_video_id(string) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-exports.run = function(server_name, text_channel_name, voice_channel_name, aliases_path, token) {
+bot.run = function(server_name, text_channel_name, voice_channel_name, aliases_path, token) {
 
 	aliases_file_path = aliases_path;
 
@@ -399,3 +421,5 @@ exports.run = function(server_name, text_channel_name, voice_channel_name, alias
 
 	bot.login(token);
 }
+
+bot.run(serverName, textChannelName, voiceChannelName, aliasesFile, botToken);
