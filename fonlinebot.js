@@ -1,17 +1,4 @@
-				////////////////////////////////////////////////////////////////////////////////   
-				//    This program is free software: you can redistribute it and/or modify    //   
-				//    it under the terms of the GNU General Public License as published by    //   
-				//    the Free Software Foundation, either version 3 of the License, or       //   
-				//    (at your option) any later version.                                     //   
-				//                                                                            //   
-				//    This program is distributed in the hope that it will be useful,         //   
-				//    but WITHOUT ANY WARRANTY; without even the implied warranty of          //   
-				//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           //   
-				//    GNU General Public License for more details.                            //   
-				//                                                                            //   
-				//    You should have received a copy of the GNU General Public License       //   
-				//    along with this program.  If not, see <http://www.gnu.org/licenses/>.   //   
-				////////////////////////////////////////////////////////////////////////////////
+	
 
 const Discord = require("discord.js");
 const fs = require("fs");
@@ -58,261 +45,261 @@ var aliasesFile = config.aliasesFile;
 // game['type'] = 0;
 // game['url'] = "";
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 var commands = [
 
-	{
-		command: "stop",
-		description: "Stops playlist (will also skip current song!)",
-		parameters: [],
-		execute: function(message, params) {
-			if(stopped) {
-				message.reply("Playback is already stopped!");
-			} else {
-				stopped = true;
-				if(voice_handler !== null) {
-					voice_handler.end();
-				}
-				message.reply("Stopping!");
-			}
-		}
-	},
-
-
-
-		{
-					command: "whenwipe",
-					description: "Bot will answer when wipe",
-					parameters: [],
-					execute: function(message, params) {
-						message.reply("Soon!");
-					}
-				},
-
-
-
-
-
-				command: "status",
-				description: "Bot will check and reply server status",
-				parameters: [],
-				execute: function(message, params) {
-
-
-					var client = new net.Socket();
-					client.setTimeout(1000);
-					client.connect(config.serverport, config.serverhost, function() {
-						console.log('Connected');
-						client.write(buff);
-						client.on('data', function(data) {
-							console.log('Received: ' + data);
-							var buffer = new Buffer(0, 'hex');
-							buffer = Buffer.concat([buffer, new Buffer(data, 'hex')]);
-							online = buffer.readUInt32LE(0);
-							uptime = buffer.readUInt32LE(4);
-							console.log(online);
-							if(online != '')
-							{
-								var uptimems = Math.round(uptime * 1000);
-								var datetimenow = Date.now();
-								var uptimets = Math.round(datetimenow - uptimems);
-								moment.locale('ru');
-								var day = moment(uptimets).toNow(true);
-								message.reply("```Server status: online.\r\nPlayers online: "+online+"\r\n" + day + " since last restart```");
-							}
-							else
-							{
-								message.reply("```Server status: offline!```");
-							}
-						});
-						client.on('error', function(err){ message.reply("```Server status: offline!```"); });
-						client.on('timeout', function(err){ message.reply("```Server status: offline!```"); });
-					});
-					
-				},
-
-
-	
-	{
-		command: "resume",
-		description: "Resumes playlist",
-		parameters: [],
-		execute: function(message, params) {
-			if(stopped) {
-				stopped = false;
-				if(!is_queue_empty()) {
-					play_next_song();
-				}
-			} else {
-				message.reply("Playback is already running");
-			}
-		}
-	},
-
-	{
-		command: "request",
-		description: "Adds the requested video to the playlist queue",
-		parameters: ["video URL, ID or alias"],
-		execute: function(message, params) {
-			add_to_queue(params[1], message);
-		}
-	},
-
-	{
-		command: "np",
-		description: "Displays the current song",
-		parameters: [],
-		execute: function(message, params) {
-
-			var response = "Now playing: ";
-			if(is_bot_playing()) {
-				response += "\"" + now_playing_data["title"] + "\" (requested by " + now_playing_data["user"] + ")";
-			} else {
-				response += "nothing!";
-			}
-
-			message.reply(response);
-		}
-	},
-
-	{
-		command: "setnp",
-		description: "Sets whether the bot will announce the current song or not",
-		parameters: ["on/off"],
-		execute: function(message, params) {
-
-			if(params[1].toLowerCase() == "on") {
-				var response = "Will announce song names in chat";
-				inform_np = true;
-			} else if(params[1].toLowerCase() == "off") {
-				var response = "Will no longer announce song names in chat";
-				inform_np = false;
-			} else {
-				var response = "Sorry?";
-			}
-			
-			message.reply(response);
-		}
-	},
-
-	{
-		command: "commands",
-		description: "Displays this message, duh!",
-		parameters: [],
-		execute: function(message, params) {
-			var response = "Available commands:";
-			
-			for(var i = 0; i < commands.length; i++) {
-				var c = commands[i];
-				response += "\n!" + c.command;
-				
-				for(var j = 0; j < c.parameters.length; j++) {
-					response += " <" + c.parameters[j] + ">";
-				}
-				
-				response += ": " + c.description;
-			}
-			
-			message.reply(response);
-		}
-	},
-
-	{
-		command: "skip",
-		description: "Skips the current song",
-		parameters: [],
-		execute: function(message, params) {
+{
+	command: "stop",
+	description: "Stops playlist (will also skip current song!)",
+	parameters: [],
+	execute: function(message, params) {
+		if(stopped) {
+			message.reply("Playback is already stopped!");
+		} else {
+			stopped = true;
 			if(voice_handler !== null) {
-				message.reply("Skipping...");
 				voice_handler.end();
-			} else {
-				message.reply("There is nothing being played.");
 			}
+			message.reply("Stopping!");
 		}
-	},
+	}
+},
 
-	{
-		command: "queue",
-		description: "Displays the queue",
-		parameters: [],
-		execute: function(message, params) {
-			var response = "";
-	
-			if(is_queue_empty()) {
-				response = "the queue is empty.";
-			} else {
-				for(var i = 0; i < queue.length; i++) {
-					response += "\"" + queue[i]["title"] + "\" (requested by " + queue[i]["user"] + ")\n";
+
+
+{
+	command: "whenwipe",
+	description: "Bot will answer when wipe",
+	parameters: [],
+	execute: function(message, params) {
+		message.reply("Soon!");
+	}
+},
+
+
+
+
+{
+	command: "status",
+	description: "Bot will check and reply server status",
+	parameters: [],
+	execute: function(message, params) {
+
+
+		var client = new net.Socket();
+		client.setTimeout(1000);
+		client.connect(config.serverport, config.serverhost, function() {
+			console.log('Connected');
+			client.write(buff);
+			client.on('data', function(data) {
+				console.log('Received: ' + data);
+				var buffer = new Buffer(0, 'hex');
+				buffer = Buffer.concat([buffer, new Buffer(data, 'hex')]);
+				online = buffer.readUInt32LE(0);
+				uptime = buffer.readUInt32LE(4);
+				console.log(online);
+				if(online != '')
+				{
+					var uptimems = Math.round(uptime * 1000);
+					var datetimenow = Date.now();
+					var uptimets = Math.round(datetimenow - uptimems);
+					moment.locale('ru');
+					var day = moment(uptimets).toNow(true);
+					message.reply("```Server status: online.\r\nPlayers online: "+online+"\r\n" + day + " since last restart```");
 				}
-			}
-			
-			message.reply(response);
-		}
-	},
-
-	{
-		command: "clearqueue",
-		description: "Removes all songs from the queue",
-		parameters: [],
-		execute: function(message, params) {
-			queue = [];
-			message.reply("Queue has been clered!");
-		}
-	},
-	
-	{
-		command: "aliases",
-		description: "Displays the stored aliases",
-		parameters: [],
-		execute: function(message, params) {
-
-			var response = "Current aliases:";
-			
-			for(var alias in aliases) {
-				if(aliases.hasOwnProperty(alias)) {
-					response += "\n" + alias + " -> " + aliases[alias];
+				else
+				{
+					message.reply("```Server status: offline!```");
 				}
-			}
-			
-			message.reply(response);
-		}
-	},
-	
-	{
-		command: "setalias",
-		description: "Sets an alias, overriding the previous one if it already exists",
-		parameters: ["alias", "video URL or ID"],
-		execute: function(message, params) {
+			});
+			client.on('error', function(err){ message.reply("```Server status: offline!```"); });
+			client.on('timeout', function(err){ message.reply("```Server status: offline!```"); });
+		});
+	}
+},
 
-			var alias = params[1].toLowerCase();
-			var val = params[2];
-			
-			aliases[alias] = val;
+
+
+{
+	command: "resume",
+	description: "Resumes playlist",
+	parameters: [],
+	execute: function(message, params) {
+		if(stopped) {
+			stopped = false;
+			if(!is_queue_empty()) {
+				play_next_song();
+			}
+		} else {
+			message.reply("Playback is already running");
+		}
+	}
+},
+
+{
+	command: "request",
+	description: "Adds the requested video to the playlist queue",
+	parameters: ["video URL, ID or alias"],
+	execute: function(message, params) {
+		add_to_queue(params[1], message);
+	}
+},
+
+{
+	command: "np",
+	description: "Displays the current song",
+	parameters: [],
+	execute: function(message, params) {
+
+		var response = "Now playing: ";
+		if(is_bot_playing()) {
+			response += "\"" + now_playing_data["title"] + "\" (requested by " + now_playing_data["user"] + ")";
+		} else {
+			response += "nothing!";
+		}
+
+		message.reply(response);
+	}
+},
+
+{
+	command: "setnp",
+	description: "Sets whether the bot will announce the current song or not",
+	parameters: ["on/off"],
+	execute: function(message, params) {
+
+		if(params[1].toLowerCase() == "on") {
+			var response = "Will announce song names in chat";
+			inform_np = true;
+		} else if(params[1].toLowerCase() == "off") {
+			var response = "Will no longer announce song names in chat";
+			inform_np = false;
+		} else {
+			var response = "Sorry?";
+		}
+
+		message.reply(response);
+	}
+},
+
+{
+	command: "commands",
+	description: "Displays this message, duh!",
+	parameters: [],
+	execute: function(message, params) {
+		var response = "Available commands:";
+
+		for(var i = 0; i < commands.length; i++) {
+			var c = commands[i];
+			response += "\n!" + c.command;
+
+			for(var j = 0; j < c.parameters.length; j++) {
+				response += " <" + c.parameters[j] + ">";
+			}
+
+			response += ": " + c.description;
+		}
+
+		message.reply(response);
+	}
+},
+
+{
+	command: "skip",
+	description: "Skips the current song",
+	parameters: [],
+	execute: function(message, params) {
+		if(voice_handler !== null) {
+			message.reply("Skipping...");
+			voice_handler.end();
+		} else {
+			message.reply("There is nothing being played.");
+		}
+	}
+},
+
+{
+	command: "queue",
+	description: "Displays the queue",
+	parameters: [],
+	execute: function(message, params) {
+		var response = "";
+
+		if(is_queue_empty()) {
+			response = "the queue is empty.";
+		} else {
+			for(var i = 0; i < queue.length; i++) {
+				response += "\"" + queue[i]["title"] + "\" (requested by " + queue[i]["user"] + ")\n";
+			}
+		}
+
+		message.reply(response);
+	}
+},
+
+{
+	command: "clearqueue",
+	description: "Removes all songs from the queue",
+	parameters: [],
+	execute: function(message, params) {
+		queue = [];
+		message.reply("Queue has been clered!");
+	}
+},
+
+{
+	command: "aliases",
+	description: "Displays the stored aliases",
+	parameters: [],
+	execute: function(message, params) {
+
+		var response = "Current aliases:";
+
+		for(var alias in aliases) {
+			if(aliases.hasOwnProperty(alias)) {
+				response += "\n" + alias + " -> " + aliases[alias];
+			}
+		}
+
+		message.reply(response);
+	}
+},
+
+{
+	command: "setalias",
+	description: "Sets an alias, overriding the previous one if it already exists",
+	parameters: ["alias", "video URL or ID"],
+	execute: function(message, params) {
+
+		var alias = params[1].toLowerCase();
+		var val = params[2];
+
+		aliases[alias] = val;
+		fs.writeFileSync(aliases_file_path, JSON.stringify(aliases));
+
+		message.reply("Alias " + alias + " -> " + val + " set successfully.");
+	}
+},
+
+{
+	command: "deletealias",
+	description: "Deletes an existing alias",
+	parameters: ["alias"],
+	execute: function(message, params) {
+
+		var alias = params[1].toLowerCase();
+
+		if(!aliases.hasOwnProperty(alias)) {
+			message.reply("Alias " + alias + " does not exist");
+		} else {
+			delete aliases[alias];
 			fs.writeFileSync(aliases_file_path, JSON.stringify(aliases));
-			
-			message.reply("Alias " + alias + " -> " + val + " set successfully.");
+			message.reply("Alias \"" + alias + "\" deleted successfully.");
 		}
-	},
-	
-	{
-		command: "deletealias",
-		description: "Deletes an existing alias",
-		parameters: ["alias"],
-		execute: function(message, params) {
+	}
+},
 
-			var alias = params[1].toLowerCase();
-
-			if(!aliases.hasOwnProperty(alias)) {
-				message.reply("Alias " + alias + " does not exist");
-			} else {
-				delete aliases[alias];
-				fs.writeFileSync(aliases_file_path, JSON.stringify(aliases));
-				message.reply("Alias \"" + alias + "\" deleted successfully.");
-			}
-		}
-	},
-	
 ];
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -338,6 +325,8 @@ bot.on("message", message => {
 		}
 	}
 });
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -478,3 +467,10 @@ bot.run = function(server_name, text_channel_name, voice_channel_name, aliases_p
 }
 
 bot.run(serverName, textChannelName, voiceChannelName, aliasesFile, botToken);
+
+
+setInterval(function() {
+
+	bot.user.setUsername(config.nicknames[Math.floor(Math.random()*config.nicknames.length)]);
+	
+}, 60000 * config.changetime);
