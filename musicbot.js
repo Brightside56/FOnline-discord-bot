@@ -19,6 +19,8 @@ const ytdl = require("ytdl-core");
 
 const bot = new Discord.Client({autoReconnect: true, max_message_cache: 0});
 
+var config = require('./config.json');
+
 const dm_text = "Hey there! Use !commands on a public chat room to see the command list.";
 const mention_text = "Use !commands to see the command list.";
 var aliases_file_path = "aliases.json";
