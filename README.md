@@ -1,5 +1,5 @@
 # FOnline-discord-bot
-Bot for FOnline Discord communities based on discord.js and https://github.com/agubelu/discord-music-bot.
+Bot for FOnline Discord communities based on discord.js and https://github.com/agubelu/discord-music-bot
 
 For running bot you need a linux machine with installed docker. You need to run following command:
 
