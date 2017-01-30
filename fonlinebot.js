@@ -78,6 +78,61 @@ var commands = [
 			}
 		}
 	},
+
+
+
+		{
+					command: "whenwipe",
+					description: "Bot will answer when wipe",
+					parameters: [],
+					execute: function(message, params) {
+						message.reply("Soon!");
+					}
+				},
+
+
+
+
+
+				command: "status",
+				description: "Bot will check and reply server status",
+				parameters: [],
+				execute: function(message, params) {
+
+
+					var client = new net.Socket();
+					client.setTimeout(1000);
+					client.connect(config.serverport, config.serverhost, function() {
+						console.log('Connected');
+						client.write(buff);
+						client.on('data', function(data) {
+							console.log('Received: ' + data);
+							var buffer = new Buffer(0, 'hex');
+							buffer = Buffer.concat([buffer, new Buffer(data, 'hex')]);
+							online = buffer.readUInt32LE(0);
+							uptime = buffer.readUInt32LE(4);
+							console.log(online);
+							if(online != '')
+							{
+								var uptimems = Math.round(uptime * 1000);
+								var datetimenow = Date.now();
+								var uptimets = Math.round(datetimenow - uptimems);
+								moment.locale('ru');
+								var day = moment(uptimets).toNow(true);
+								message.reply("```Server status: online.\r\nPlayers online: "+online+"\r\n" + day + " since last restart```");
+							}
+							else
+							{
+								message.reply("```Server status: offline!```");
+							}
+						});
+						client.on('error', function(err){ message.reply("```Server status: offline!```"); });
+						client.on('timeout', function(err){ message.reply("```Server status: offline!```"); });
+					});
+					
+				},
+
+
 	
 	{
 		command: "resume",
