@@ -50,25 +50,6 @@ var aliasesFile = config.aliasesFile;
 var commands = [
 
 {
-	command: "stop",
-	description: "Stops playlist (will also skip current song!)",
-	parameters: [],
-	execute: function(message, params) {
-		if(stopped) {
-			message.reply("Playback is already stopped!");
-		} else {
-			stopped = true;
-			if(voice_handler !== null) {
-				voice_handler.end();
-			}
-			message.reply("Stopping!");
-		}
-	}
-},
-
-
-
-{
 	command: "whenwipe",
 	description: "Bot will answer when wipe",
 	parameters: [],
@@ -104,20 +85,37 @@ var commands = [
 					var uptimets = Math.round(datetimenow - uptimems);
 					moment.locale('en');
 					var day = moment(uptimets).toNow(true);
-					message.reply("```Server status: online.\r\nPlayers online: "+online+"\r\n" + day + " since last restart```");
+					message.reply("Server status: online.\r\nPlayers online: "+online+"\r\n" + day + " since last restart");
 				}
 				else
 				{
-					message.reply("```Server status: offline!```");
+					message.reply("Server status: offline!");
 				}
 			});
-			client.on('error', function(err){ message.reply("```Server status: offline!```"); });
-			client.on('timeout', function(err){ message.reply("```Server status: offline!```"); });
+			client.on('error', function(err){ message.reply("Server status: offline!"); });
+			client.on('timeout', function(err){ message.reply("Server status: offline!"); });
 		});
 	}
 },
 
 
+
+{
+	command: "stop",
+	description: "Stops playlist (will also skip current song!)",
+	parameters: [],
+	execute: function(message, params) {
+		if(stopped) {
+			message.reply("Playback is already stopped!");
+		} else {
+			stopped = true;
+			if(voice_handler !== null) {
+				voice_handler.end();
+			}
+			message.reply("Stopping!");
+		}
+	}
+},
 
 {
 	command: "resume",
