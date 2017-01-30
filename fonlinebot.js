@@ -29,7 +29,7 @@ var text_channel = null;
 var buff = new Buffer([0xFF, 0xFF, 0xFF, 0xFF]);
 var net = require('net');
 var Math = require('math');
-var buffer = new Buffer(0, 'hex');
+var buffer = new Buffer('', 'hex');
 
 var online = '';
 var uptime = '';
@@ -85,8 +85,6 @@ var commands = [
 	description: "Bot will check and reply server status",
 	parameters: [],
 	execute: function(message, params) {
-
-
 		var client = new net.Socket();
 		client.setTimeout(1000);
 		client.connect(config.serverport, config.serverhost, function() {
@@ -94,7 +92,7 @@ var commands = [
 			client.write(buff);
 			client.on('data', function(data) {
 				console.log('Received: ' + data);
-				var buffer = new Buffer(0, 'hex');
+				var buffer = new Buffer('', 'hex');
 				buffer = Buffer.concat([buffer, new Buffer(data, 'hex')]);
 				online = buffer.readUInt32LE(0);
 				uptime = buffer.readUInt32LE(4);
@@ -104,7 +102,7 @@ var commands = [
 					var uptimems = Math.round(uptime * 1000);
 					var datetimenow = Date.now();
 					var uptimets = Math.round(datetimenow - uptimems);
-					moment.locale('ru');
+					moment.locale('en');
 					var day = moment(uptimets).toNow(true);
 					message.reply("```Server status: online.\r\nPlayers online: "+online+"\r\n" + day + " since last restart```");
 				}
@@ -439,6 +437,8 @@ bot.run = function(server_name, text_channel_name, voice_channel_name, aliases_p
 	bot.on("ready", () => {
 		var server = bot.guilds.find("name", server_name);
 		if(server === null) throw "Couldn't find server '" + server_name + "'";
+
+		bot.user.setGame('Say !commands') ;
 
 		var voice_channel = server.channels.find(chn => chn.name === voice_channel_name && chn.type === "voice"); //The voice channel the bot will connect to
 		if(voice_channel === null) throw "Couldn't find voice channel '" + voice_channel_name + "' in server '" + server_name + "'";

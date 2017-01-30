@@ -1,11 +1,11 @@
 {
     "botToken" : "MjIzNzkyMzgwNzE1ODU5OTY4.C3Efrw.KHknGO3YfWVOG-iTbHcr3kmo9kY",
-    "serverName" : "Talon Company",
+    "serverName" : "FOnline2",
     "serverport" : "4000",
     "serverhost" : "game.fonline2.com",
     "nicknames" : ["Pti4ka", "Mabus", "T-888", "Msh"],
     "changetime" : 600
-    "textChannelName" : "flood",
+    "textChannelName" : "stopflood",
     "voiceChannelName" : "AFK",
     "aliasesFile" : "aliases.json"
 }
