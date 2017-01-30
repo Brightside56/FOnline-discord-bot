@@ -1,6 +1,0 @@
-diff a/.gitignore b/.gitignore	(rejected hunks)
-@@ -0 +0 @@
--config.json
-\ No newline at end of file
-+/config.json
-\ No newline at end of file
