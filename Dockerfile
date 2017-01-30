@@ -13,4 +13,4 @@ RUN npm install unique-random-array
 RUN npm install math
 RUN npm install moment
 
-CMD ["node", "server.js"]
+CMD ["node", "fonlinebot.js"]
