@@ -4,9 +4,9 @@
     "nickNames" : ["Pti4ka", "Mabus", "T-888", "Msh"],
     "botToken" : "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
     "changeTime" : 600
-    "serverName" : "FOnline 2 Discord Community";
-    "textChannelName" : "Your text channel name here (without #)";
-    "voiceChannelName" : "Your voice channel name here";
-    "aliasesFile" = "aliases.json";
+    "serverName" : "FOnline 2 Discord Community",
+    "textChannelName" : "Your text channel name here (without #)",
+    "voiceChannelName" : "AFK",
+    "aliasesFile" = "aliases.json"
 }
 
