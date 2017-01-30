@@ -438,7 +438,7 @@ bot.run = function(server_name, text_channel_name, voice_channel_name, aliases_p
 		var server = bot.guilds.find("name", server_name);
 		if(server === null) throw "Couldn't find server '" + server_name + "'";
 
-		bot.user.setGame('Say !commands') ;
+		bot.user.setGame('Say !commands');
 
 		var voice_channel = server.channels.find(chn => chn.name === voice_channel_name && chn.type === "voice"); //The voice channel the bot will connect to
 		if(voice_channel === null) throw "Couldn't find voice channel '" + voice_channel_name + "' in server '" + server_name + "'";
