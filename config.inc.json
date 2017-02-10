@@ -7,5 +7,6 @@
     "changetime" : 600,
     "textChannelName" : "stopflood",
     "voiceChannelName" : "AFK",
-    "aliasesFile" : "aliases.json"
+    "aliasesFile" : "aliases.json",
+    "ytapikey" : "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 }
