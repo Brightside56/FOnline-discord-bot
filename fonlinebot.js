@@ -40,7 +40,7 @@ var serverName = config.serverName;
 var textChannelName = config.textChannelName;
 var voiceChannelName = config.voiceChannelName;
 var aliasesFile = config.aliasesFile;
-var yt_api_key = congih.ytapikey;
+var yt_api_key = config.ytapikey;
 
 // var game = {};
 // game['name'] = "!help";
