@@ -13,6 +13,7 @@ RUN npm install ytdl-core
 RUN npm install node-opus
 RUN npm install discord.js
 RUN npm install unique-random-array
+RUN npm install request
 RUN npm install math
 RUN npm install moment
 
