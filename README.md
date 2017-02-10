@@ -3,9 +3,11 @@ Bot for FOnline Discord communities based on discord.js and https://github.com/a
 
 For running bot you need a linux machine with installed docker. You need to run following command:
 
-```docker run --restart=always -v <path to config.json>:/src/config.json brightside/fonline-discord-bot```
+```docker run --restart=unless-stopped -v <path to config.json>:/src/config.json brightside/fonline-discord-bot```
 
 `<path to config.json>` - full path to config.json (you can find example in repo), which contains bot parameters, such as serverport (port of FOnline server), serverhost (domain name or IP address of FOnline server), nicknames (array, bot can change it periodically), changetime (nickname from array changetime, in minutes), bottoken (token for bot user on Discord, you can generate it in [Discord devepopers portal](https://discordapp.com/developers))
+
+For working youtube search you need to get youtube API-key and include it in config
 
 After docker container starts, register a new Discord application for your own instance of the bot. Keep track of the Client ID and your token.
 
