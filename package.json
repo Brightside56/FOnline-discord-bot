@@ -1,32 +1,33 @@
 {
-  "name": "discord-music-bot",
-  "version": "2.1.1",
-  "description": "Simple music bot for Discord servers.",
-  "main": "musicbot.js",
+  "name": "FOnline-discord-bot",
+  "version": "0.2b",
+  "description": "Simple music bot for FOnline Discord servers.",
+  "main": "fonlinebot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/agubelu/discord-music-bot.git"
+    "url": "git+https://github.com/Brightside56/FOnline-discord-bot.git"
   },
   "keywords": [
     "discord",
     "bot",
-    "music"
+    "fonline"
   ],
-  "author": "agubelu",
+  "author": "Brightside",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/agubelu/discord-music-bot/issues"
+    "url": "https://github.com/Brightside56/FOnline-discord-bot"
   },
   "dependencies": {
     "discord.js": "^11.0.0",
     "ytdl-core": "^0.7.21",
+    "request": "^2.79.0",
     "node-opus": "^0.2.4"
   },
   "engines": {
     "node": ">=6.0.0"
   },
-  "homepage": "https://github.com/agubelu/discord-music-bot#readme"
+  "homepage": "https://github.com/Brightside56/FOnline-discord-bot#readme"
 }
