@@ -3,6 +3,7 @@ MAINTAINER Oleg Gumbar <brightside@fonline-status.ru>
 
 WORKDIR /src
 
+
 ADD fonlinebot.js /src/
 ADD avatar.png /src/
 
