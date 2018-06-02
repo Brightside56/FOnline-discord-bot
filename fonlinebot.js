@@ -24,7 +24,7 @@ var uptime = '';
 var botToken = config.botToken;
 var serverName = config.serverName;
 var roles = config.authorizedRoles;
-var nfswrole = config.nfswRole;
+var nsfwrole = config.nsfwRole;
 
 
 var commands = [
@@ -77,13 +77,13 @@ var commands = [
 },
 
 {
-        command: "purge",
+        command: "prune",
         description: "Deletes number of messages you want to delete",
         parameters: ["Count of messages"],
 	permissions: 1,
         execute: function(message, params) {
 		let messagecount = parseInt(params[1]);
-		if (messagecount > 0 && messagecount < 100)
+		if (messagecount > 0 && messagecount < 501)
 		{
 	                message.channel.fetchMessages({limit: (messagecount + 1)}).then(messages => message.channel.bulkDelete(messages));
 	                message.channel.send("Clearing the area! "+messagecount+" messages deleted.");
@@ -92,16 +92,16 @@ var commands = [
 },
 
 {
-        command: "nfsw",
-        description: "Let you use nfsw-freetalk channel",
+        command: "nsfwtalk",
+        description: "Let you use nsfw-freetalk channel",
         parameters: [],
 	permissions: 0,
         execute: function(message, params) {
-		if(!message.member.roles.find("name", nfswrole)){
-			let role = message.guild.roles.find("name", "FreeTalker");
+		if(!message.member.roles.find("name", nsfwrole)){
+			let role = message.guild.roles.find("name", nsfwrole);
 			message.member.addRole(role);
-			var nfsw_msg = fs.readFileSync("/src/addon/nfsw_rules.txt", {"encoding": "utf-8"});
-			message.author.send(nfsw_msg);
+			var nsfw_msg = fs.readFileSync("/src/addon/nsfw_rules.txt", {"encoding": "utf-8"});
+			message.author.send(nsfw_msg);
 		}
         }
 },

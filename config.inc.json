@@ -3,6 +3,6 @@
     "serverName" : "FOnline2",
     "serverport" : "4000",
     "serverhost" : "game.fonline2.com",
-    "nfswRole" : "FreeTalker",
+    "nsfwRole" : "FreeTalker",
     "authorizedRoles" : ["Administrators","Moderator"]
 }
