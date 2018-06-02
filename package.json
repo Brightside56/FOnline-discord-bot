@@ -1,6 +1,6 @@
 {
   "name": "FOnline-discord-bot",
-  "version": "0.2b",
+  "version": "0.4b",
   "description": "Simple music bot for FOnline Discord servers.",
   "main": "fonlinebot.js",
   "scripts": {
@@ -22,12 +22,10 @@
   },
   "dependencies": {
     "discord.js": "^11.0.0",
-    "ytdl-core": "^0.7.21",
-    "request": "^2.79.0",
-    "node-opus": "^0.2.4"
+    "request": "^2.79.0"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=10.0.0"
   },
   "homepage": "https://github.com/Brightside56/FOnline-discord-bot#readme"
 }
