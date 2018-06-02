@@ -86,7 +86,7 @@ var commands = [
 		if (messagecount > 0 && messagecount < 100)
 		{
 	                message.channel.fetchMessages({limit: (messagecount + 1)}).then(messages => message.channel.bulkDelete(messages));
-	                message.channel.message.send("Clearing the area! "+messagecount+" messages deleted.");
+	                message.channel.send("Clearing the area! "+messagecount+" messages deleted.");
 		}
         }
 },
