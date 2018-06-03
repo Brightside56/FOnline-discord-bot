@@ -25,8 +25,6 @@ var botToken = config.botToken;
 var serverName = config.serverName;
 var roles = config.authorizedRoles;
 var nsfwrole = config.nsfwRole;
-var jokes = config.jokes;
-var eightball = config.eightball;
 
 
 var commands = [
@@ -85,6 +83,7 @@ var commands = [
         parameters: [],
         permissions: 0,
         execute: function(message, params) {
+		var jokes = get_items_from_file("./addon/jokes.txt");
 		message.channel.send(jokes[Math.floor(Math.random()*jokes.length)])
         }
 },
@@ -95,7 +94,19 @@ var commands = [
         parameters: [],
         permissions: 0,
         execute: function(message, params) {
-                message.channel.send(eightball[Math.floor(Math.random()*eightball.length)])
+		var eightball = get_items_from_file("./addon/8ball.txt");
+                message.channel.send(":8ball: "+eightball[Math.floor(Math.random()*eightball.length)])
+        }
+},
+
+{
+        command: "tip",
+        description: "Bot will print random tip",
+        parameters: [],
+        permissions: 0,
+        execute: function(message, params) {
+                var tips = get_items_from_file("./addon/tips.txt");
+                message.channel.send(tips[Math.floor(Math.random()*tips.length)])
         }
 },
 
@@ -200,6 +211,17 @@ bot.on("message", message => {
 			}
 		}
 });
+
+
+////////////////////////////////////////////////////
+
+
+function get_items_from_file(filename){
+
+	var array = fs.readFileSync(filename).toString().split("\n");
+	return array;
+}
+
 
 function search_command(command_name) {
         for(var i = 0; i < commands.length; i++) {
