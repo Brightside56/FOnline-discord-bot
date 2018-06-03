@@ -68,14 +68,22 @@ var commands = [
 {
         command: "changename",
         description: "Bot will change nickname",
-        parameters: [],
+        parameters: ["nickname"],
 	permissions: 1,
         execute: function(message, params) {
-		let nickname = message.content.substr("!changename ".length);
-                bot.user.setUsername(nickname);
+                bot.user.setUsername(params[1]);
         }
 },
 
+{
+        command: "changeavatar",
+        description: "Bot will change avatar",
+        parameters: ["avatarurl"],
+        permissions: 1,
+        execute: function(message, params) {
+                bot.user.setAvatar(params[1]);
+        }
+},
 
 {
         command: "joke",
