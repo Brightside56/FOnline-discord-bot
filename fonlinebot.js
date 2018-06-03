@@ -25,6 +25,8 @@ var botToken = config.botToken;
 var serverName = config.serverName;
 var roles = config.authorizedRoles;
 var nsfwrole = config.nsfwRole;
+var jokes = config.jokes;
+var eightball = config.eightball;
 
 
 var commands = [
@@ -76,6 +78,27 @@ var commands = [
         }
 },
 
+
+{
+        command: "joke",
+        description: "Bot will print random joke",
+        parameters: [],
+        permissions: 0,
+        execute: function(message, params) {
+		message.channel.send(jokes[Math.floor(Math.random()*jokes.length)])
+        }
+},
+
+{
+        command: "eightball",
+        description: "Bot will print eightball answer",
+        parameters: [],
+        permissions: 0,
+        execute: function(message, params) {
+                message.channel.send(eightball[Math.floor(Math.random()*eightball.length)])
+        }
+},
+
 {
         command: "prune",
         description: "Deletes number of messages you want to delete",
@@ -83,10 +106,17 @@ var commands = [
 	permissions: 1,
         execute: function(message, params) {
 		let messagecount = parseInt(params[1]);
-		if (messagecount > 0 && messagecount < 501)
+		if (messagecount > 0 && messagecount < 101)
 		{
-	                message.channel.fetchMessages({limit: (messagecount + 1)}).then(messages => message.channel.bulkDelete(messages));
-	                message.channel.send("Clearing the area! "+messagecount+" messages deleted.");
+	                message.channel.fetchMessages({limit: (messagecount + 1)}).then(messages => {
+				message.channel.bulkDelete(messages);
+				messagesDeleted = messages.array().length;
+	                	message.channel.send("Clearing the area! "+messagesDeleted+" messages deleted.");
+			})
+			.catch(err => {
+				console.log('Error while doing Bulk Delete');
+				console.log(err);
+			});
 		}
         }
 },
