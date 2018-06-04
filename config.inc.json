@@ -4,5 +4,6 @@
     "serverport" : "4000",
     "serverhost" : "game.fonline2.com",
     "nsfwRole" : "FreeTalker",
-    "authorizedRoles" : ["Administrators","Moderator"]
+    "authorizedRoles" : ["Administrators","Moderator"],
+    "botusername" : ["Roza"]
 }
