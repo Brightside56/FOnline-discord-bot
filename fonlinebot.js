@@ -25,7 +25,6 @@ var botToken = config.botToken;
 var serverName = config.serverName;
 var roles = config.authorizedRoles;
 var nsfwrole = config.nsfwRole;
-var botusername = config.botusername;
 
 
 var commands = [
@@ -127,8 +126,7 @@ var commands = [
 	permissions: 1,
         execute: function(message, params) {
 		let messagecount = parseInt(params[1]);
-		if (messagecount > 0 && messagecount < 101)
-		{
+		if (messagecount > 0 && messagecount < 100) {
 	                message.channel.fetchMessages({limit: (messagecount + 1)}).then(messages => {
 				message.channel.bulkDelete(messages);
 				messagesDeleted = messages.array().length;
@@ -139,6 +137,17 @@ var commands = [
 				console.log(err);
 			});
 		}
+		else {
+                        message.channel.fetchMessages({limit: (100)}).then(messages => {
+                                message.channel.bulkDelete(messages);
+                                messagesDeleted = messages.array().length;
+                                message.channel.send("Clearing the area! "+(messagesDeleted)+" messages deleted.");
+                        })
+                        .catch(err => {
+                                console.log('Error while doing Bulk Delete');
+                                console.log(err);
+                        });
+                }
         }
 },
 
@@ -276,7 +285,6 @@ bot.run = function(server_name, token) {
 		var server = bot.guilds.find("name", server_name);
 		if(server === null) throw "Couldn't find server '" + server_name + "'";
 		bot.user.setActivity('Say !commands');
-		bot.user.setUsername(botusername);
 		console.log("Connected!");
 	});
 
