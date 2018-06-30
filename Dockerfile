@@ -3,20 +3,11 @@ MAINTAINER Oleg Gumbar <brightside@fonline-status.ru>
 
 WORKDIR /src
 
-
-ADD fonlinebot.js /src/
-ADD ./addon /src/addon/
+ADD ./src /src
+ADD ./assets /src/assets
 
 RUN apk update
-RUN apk add --no-cache make gcc g++ python mc htop nano openssl
-#RUN apk add --update ffmpeg
-#RUN npm install ytdl-core
-#RUN npm install node-opus
-RUN npm install discord.js
-#RUN npm install unique-random-array
-RUN npm install request
-RUN npm install math
-RUN npm install moment
-#RUN npm install readline
+#RUN apk add --no-cache make gcc g++ python mc htop nano openssl
+RUN npm install discord.js request math moment csvtojson mysql async request-promise
 
-CMD ["node", "fonlinebot.js"]
+CMD ["node", "./fonlinebot.js"]

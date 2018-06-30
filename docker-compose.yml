@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  bot:
+    build: 
+      context: ./
+    depends_on:
+      - db
+    volumes:
+      - ./config.json:/config.json
+    restart: on-failure:10
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./db:/var/lib/mysql 
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: bot
+    restart: on-failure:10

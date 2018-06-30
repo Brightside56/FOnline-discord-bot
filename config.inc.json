@@ -4,5 +4,8 @@
     "serverport" : "4000",
     "serverhost" : "game.fonline2.com",
     "nsfwRole" : "FreeTalker",
-    "authorizedRoles" : ["Administrators","Moderator"]
+    "authorizedRoles" : ["Administrators","Moderator"],
+    "botchannelid" : ["455720027144978432"],
+    "applychannelid" : ["461618188371623948"],
+    "applyadminid": ["154670777814220801"]
 }
