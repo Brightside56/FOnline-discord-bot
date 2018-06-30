@@ -6,7 +6,7 @@ const request = require("request");
 const bot = new Discord.Client({autoReconnect: true, max_message_cache: 0});
 
 var config = require('../config.json');
-var events = require('../assets/events.json');
+var events = require('./assets/events.json');
 
 const dm_text = "Hey there! Use !commands on any FOnline 2 server chat room to see the command list.";
 const usebotchanneltext = "Using of this command is allowed only in bot channel";
