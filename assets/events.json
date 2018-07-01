@@ -1,8 +1,7 @@
 {
-  "events": [
-
-    { "name":"EVENT_HUNGER_GAMES",
-      "title":"Hunger games event will start in % minutes, go to Hub and talk with manager to join",
-      "logic": "Announce" }
-  ]
+  "EVENT_HUNGER_GAMES":
+    {
+      "title": "Hunger games event will start in %s minutes, go to Hub and talk with manager to join",
+      "logic": "Announce"
+    }
 }

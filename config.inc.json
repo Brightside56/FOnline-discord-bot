@@ -1,11 +1,25 @@
 {
-    "botToken" : "XXXXXXXXXXXXXXXXXXXXXXXX",
-    "serverName" : "FOnline2",
-    "serverport" : "4000",
-    "serverhost" : "game.fonline2.com",
-    "nsfwRole" : "FreeTalker",
-    "authorizedRoles" : ["Administrators","Moderator"],
-    "botchannelid" : ["455720027144978432"],
-    "applychannelid" : ["461618188371623948"],
-    "applyadminid": ["154670777814220801"]
+    "botToken": "XXXXXXXXXXXX",
+    "serverName": "FOnline2",
+    "serverport": "4000",
+    "serverhost": "game.fonline2.com",
+    "dbhost": "db",
+    "dbuser": "root",
+    "dbpass": "password",
+    "dbname": "bot",
+    "tblname": "events",
+    "eventsurl": "http://XXXXXXX/api/",
+    "simurl": "http://XXXXXXX/api/",
+    "nsfwRole": "FreeTalker",
+    "authorizedRoles": [
+        "Administrators",
+        "Moderator"
+    ],
+    "botchannelids": [
+        "XXXXXXXXXXXXXXXXXX",
+        "XXXXXXXXXXXXXXXXXX"
+    ],
+    "applychannelid": "XXXXXXXXXXXXXXXXXX",
+    "applyadminid": "XXXXXXXXXXXXXXXXXX"
 }
+

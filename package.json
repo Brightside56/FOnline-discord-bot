@@ -1,7 +1,7 @@
 {
   "name": "FOnline-discord-bot",
-  "version": "0.4b",
-  "description": "Simple music bot for FOnline Discord servers.",
+  "version": "0.14b",
+  "description": "Simple bot for FOnline Discord servers.",
   "main": "fonlinebot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

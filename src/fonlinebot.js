@@ -2,11 +2,10 @@ const Discord = require("discord.js");
 const fs = require("fs");
 const moment = require('moment');
 const request = require("request");
-
 const bot = new Discord.Client({autoReconnect: true, max_message_cache: 0});
 
-var config = require('../config.json');
-var events = require('./assets/events.json');
+const config = require('../config.json');
+const events = require('./assets/events.json');
 
 const dm_text = "Hey there! Use !commands on any FOnline 2 server chat room to see the command list.";
 const usebotchanneltext = "Using of this command is allowed only in bot channel";
@@ -23,29 +22,30 @@ const dbpass = config.dbpass;
 const dbname = config.dbname;
 const tblname = config.tblname;
 const eventsurl = config.eventsurl;
+const simurl = config.simurl;
 
 
-var stopped = false;
-var inform_np = true;
+let stopped = false;
+let inform_np = true;
 
-var buff = new Buffer([0xFF, 0xFF, 0xFF, 0xFF]);
-var net = require('net');
-var Math = require('math');
-var buffer = new Buffer('', 'hex');
+let buff = new Buffer([0xFF, 0xFF, 0xFF, 0xFF]);
+let net = require('net');
+let Math = require('math');
+let buffer = new Buffer('', 'hex');
 
-var online = '';
-var uptime = '';
+let online = '';
+let uptime = '';
 
-var botToken = config.botToken;
-var serverName = config.serverName;
-var roles = config.authorizedRoles;
-var nsfwrole = config.nsfwRole;
-var applyadminid = config.applyadminid;
-var applychannelid = config.applychannelid;
-var botchannelid = config.botchannelid;
+let botToken = config.botToken;
+let serverName = config.serverName;
+let roles = config.authorizedRoles;
+let nsfwrole = config.nsfwRole;
+let applyadminid = config.applyadminid;
+let applychannelid = config.applychannelid;
+let botchannelids = config.botchannelids;
 
 //
-var commands = [
+let commands = [
 
     {
         command: "commands",
@@ -117,6 +117,33 @@ var commands = [
         execute: function (message, params) {
             var jokes = get_items_from_file("./assets/jokes.txt");
             message.channel.send(jokes[Math.floor(Math.random() * jokes.length)])
+        }
+    },
+
+    {
+        command: "sim",
+        description: "Bot will print sim status",
+        parameters: [],
+        anywhere: 0,
+        permissions: 0,
+        execute: function (message, params) {
+
+            requestasync({
+                "method": "GET",
+                "uri": simurl,
+                "json": true,
+                "headers": {
+                    "User-Agent": "FOnline 2 Discord Bot"
+                }
+            })
+                .then(context => {
+                    poller.sim(context, dbhost, dbuser, dbpass, dbname, tblname);
+                })
+                .catch(function (err) {
+                    console.log("some error with request FOnline URL");
+                    poller.events("", dbhost, dbuser, dbpass, dbname, tblname);
+                });
+
         }
     },
 
@@ -319,7 +346,7 @@ function handle_command(message, text) {
     }
     if (command) {
         if (message.channel.type !== "dm" && message.author.id !== bot.user.id) {
-            if (message.channel.id == botchannelid || command.anywhere == 1) {
+            if (botchannelids.includes(message.channel.id) || command.anywhere == 1) {
                 if (command.permissions > 0 && message.member.roles.some(r => roles.includes(r.name))) {
                     if (params.length - 1 < command.parameters.length) {
                         message.reply("Insufficient parameters!");
@@ -343,20 +370,20 @@ function handle_command(message, text) {
     }
 }
 
-
 module.exports =
     {
         sendevent: function (event) {
-            console.log(event);
-            //bot.channels.get(applychannelid).send(notification);
+            console.log(events[event.name].logic);
+            if(events[event.name].logic === "Announce") {
+                var message = util.format(events[event.name].title, "15");
+            }
+            console.log(events[event.name]);
         }
     }
-
 
 var poller = require('./poller.js');
 
 bot.run = function (server_name, token) {
-
 
     bot.on("ready", () => {
         var server = bot.guilds.find("name", server_name);
@@ -380,18 +407,14 @@ bot.run = function (server_name, token) {
             }
         })
             .then(context => {
-
                 poller.events(context, dbhost, dbuser, dbpass, dbname, tblname);
-
-
+            })
+            .catch(function (err) {
+                console.log("some error with request FOnline URL");
+                poller.events("[12.11.2018 19:00] ; 15; EVENT_HUNGER_GAMES", dbhost, dbuser, dbpass, dbname, tblname);
             });
-
-
     }, 10000);
 
 }
 
 bot.run(serverName, botToken);
-
-//
-//
