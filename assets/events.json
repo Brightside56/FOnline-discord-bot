@@ -1,7 +1,22 @@
 {
-  "EVENT_HUNGER_GAMES":
-    {
-      "title": "Hunger games event will start in %s minutes, go to Hub and talk with manager to join",
-      "logic": "Announce"
-    }
+  "EVENT_HUNGER_GAMES": {
+    "title": "Hunger Games event will start soon. Head to Hub and talk to event manager, time till beginning: %s",
+    "logic": "Announce"
+  },
+  "EVENT_TOWN_DEFENCE": {
+    "title": "%s is planned to be attacked. Town Militia calls for help",
+    "logic": "Announce"
+  },
+  "EVENT_SIERRA_CAVES_TB": {
+    "title": "Hunger Games Cave Edition event will start soon [%s]. Head to Hub and talk to event manager, time till beginning: %s",
+    "logic": "Announce"
+  },
+  "EVENT_SIERRA_CAVES_RT": {
+    "title": "Hunger Games Cave Edition event will start soon [%s]. Head to Hub and talk to event manager, time till beginning: %s",
+    "logic": "Announce"
+  },
+  "EVENT_CATHERDAL": {
+    "title": "There are rumors about, that there is something suspicious happening in the Cathedral",
+    "logic": "Announce"
+  }
 }

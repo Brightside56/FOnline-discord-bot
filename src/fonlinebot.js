@@ -3,6 +3,11 @@ const fs = require("fs");
 const moment = require('moment');
 const request = require("request");
 const bot = new Discord.Client({autoReconnect: true, max_message_cache: 0});
+var rn = require('random-number');
+
+var options = {
+    min:  1, max: 1000, integer: true
+}
 
 const config = require('../config.json');
 const events = require('./assets/events.json');
@@ -84,6 +89,36 @@ let commands = [
         }
     },
 
+    {
+        command: "sim",
+        description: "Bot will print simulation status",
+        parameters: [],
+        anywhere: 0,
+        permissions: 0,
+        execute: function (message, params) {
+
+
+            requestasync({
+                "method": "GET",
+                "uri": simurl,
+                "json": true,
+                "headers": {
+                    "User-Agent": "FOnline 2 Discord Bot"
+                }
+            })
+                .then(context => {
+                    poller.sim(context, message.channel.id);
+                })
+                .catch(function (err) {
+                    console.log("some error with request FOnline URL");
+                    poller.sim("", message.channel.id);
+                });
+
+
+
+        }
+    },
+
 
     {
         command: "changename",
@@ -121,33 +156,6 @@ let commands = [
     },
 
     {
-        command: "sim",
-        description: "Bot will print sim status",
-        parameters: [],
-        anywhere: 0,
-        permissions: 0,
-        execute: function (message, params) {
-
-            requestasync({
-                "method": "GET",
-                "uri": simurl,
-                "json": true,
-                "headers": {
-                    "User-Agent": "FOnline 2 Discord Bot"
-                }
-            })
-                .then(context => {
-                    poller.sim(context, dbhost, dbuser, dbpass, dbname, tblname);
-                })
-                .catch(function (err) {
-                    console.log("some error with request FOnline URL");
-                    poller.events("", dbhost, dbuser, dbpass, dbname, tblname);
-                });
-
-        }
-    },
-
-    {
         command: "eightball",
         description: "Bot will print eightball answer",
         parameters: [],
@@ -173,7 +181,7 @@ let commands = [
 
     {
         command: "apply",
-        description: "You can apply to food cooking session with Rhea",
+        description: "A command for sending an application to join Fonline2 Discord contributor section.",
         parameters: "",
         message: 1,
         anywhere: 1,
@@ -327,9 +335,10 @@ function get_items_from_file(filename) {
 }
 
 
-function search_command(command_name) {
+function search_command(text) {
     for (var i = 0; i < commands.length; i++) {
-        if (commands[i].command == command_name.toLowerCase()) {
+        let lowtext = text.toLowerCase();
+        if (commands[i].command == lowtext.substring(0, commands[i].command.length)) {
             return commands[i];
         }
     }
@@ -337,10 +346,9 @@ function search_command(command_name) {
     return false;
 }
 
-
 function handle_command(message, text) {
     var params = text.split(" ");
-    var command = search_command(params[0]);
+    var command = search_command(text);
     if (command.message > 0) {
         params = text.replace(command.command + " ", "");
     }
@@ -370,16 +378,52 @@ function handle_command(message, text) {
     }
 }
 
-module.exports =
-    {
-        sendevent: function (event) {
-            console.log(events[event.name].logic);
-            if(events[event.name].logic === "Announce") {
-                var message = util.format(events[event.name].title, "15");
-            }
-            console.log(events[event.name]);
-        }
+module.exports.sendevent = function (event) {
+    console.log(events[event.name].logic);
+    if (events[event.name].logic === "Announce") {
+        var message = util.format(events[event.name].title, "15");
     }
+    console.log(events[event.name]);
+}
+
+module.exports.sendsim = function (sim) {
+    let status = "";
+    let text = "";
+    let activity = "";
+    if(sim > 0) {
+        status = "online";
+        activity = "watching";
+        text = "simulation, players - " + sim;
+        //channel.send("Simulation is on, players - " + sim);
+        //console.log("Simulation is on, players - " + sim);
+        bot.user.setPresence({ game: { name: text, type: activity}, status: status});
+    } else {
+        status = "idle";
+        activity = "listening";
+        text = "!commands";
+        //channel.send("There is no simulation battles at the moment");
+        //console.log("There is no simulation at the moment");
+        bot.user.setPresence({ game: { name: text, type: activity}, status: status});
+    }
+}
+
+
+
+module.exports.answersim = function (sim, channel) {
+    let text = "";
+    if(sim > 0) {
+        text = "Simulation is on, players - " + sim;
+        console.log(channel);
+        bot.channels.get(channel).send(text);
+    } else {
+        text = "There is no simulation at the moment";
+        console.log(channel);
+        bot.channels.get(channel).send(text);
+    }
+}
+
+
+
 
 var poller = require('./poller.js');
 
@@ -389,6 +433,7 @@ bot.run = function (server_name, token) {
         var server = bot.guilds.find("name", server_name);
         if (server === null) throw "Couldn't find server '" + server_name + "'";
         bot.user.setActivity('Say !commands');
+        //bot.user.setPresence({ game: { name: '123', url: '456', type: ''}, status: 'idle' });
         console.log("Connected!");
     });
 
@@ -411,10 +456,38 @@ bot.run = function (server_name, token) {
             })
             .catch(function (err) {
                 console.log("some error with request FOnline URL");
-                poller.events("[12.11.2018 19:00] ; 15; EVENT_HUNGER_GAMES", dbhost, dbuser, dbpass, dbname, tblname);
+                poller.events("", dbhost, dbuser, dbpass, dbname, tblname);
             });
     }, 10000);
+
+
+    setInterval(function () {
+
+
+
+
+
+        requestasync({
+            "method": "GET",
+            "uri": simurl,
+            "json": true,
+            "headers": {
+                "User-Agent": "FOnline 2 Discord Bot"
+            }
+        })
+            .then(context => {
+                poller.sim(context);
+            })
+            .catch(function (err) {
+                console.log("some error with request FOnline URL");
+                poller.sim("");
+            });
+
+    }, 30000);
+
 
 }
 
 bot.run(serverName, botToken);
+
+
