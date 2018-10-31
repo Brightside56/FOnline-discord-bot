@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="548d121e-2e10-4fee-9ed7-ebb1b4b1b46a" name="fonline-status" url="http://fonline-status.ru">
+        <fileTransfer host="fonline-status.ru" port="22" privateKey="D:\Install\brightside" rootFolder="/root/bot" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

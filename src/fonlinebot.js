@@ -6,8 +6,11 @@ const bot = new Discord.Client({autoReconnect: true, max_message_cache: 0});
 var rn = require('random-number');
 
 var options = {
-    min:  1, max: 1000, integer: true
+    min: 1, max: 1000, integer: true
 }
+
+
+var srvstatus;
 
 const config = require('../config.json');
 const events = require('./assets/events.json');
@@ -113,8 +116,6 @@ let commands = [
                     console.log("some error with request FOnline URL");
                     poller.sim("", message.channel.id);
                 });
-
-
 
         }
     },
@@ -264,37 +265,53 @@ let commands = [
         anywhere: 0,
         permissions: 0,
         execute: function (message, params) {
+            let serverstatus;
+            let msg;
             var client = new net.Socket();
             client.setTimeout(1000);
             client.connect(config.serverport, config.serverhost, function () {
                 console.log('Connected 1');
                 client.write(buff);
-                client.on('data', function (data) {
-                    console.log('Received: ' + data);
-                    var buffer = new Buffer('', 'hex');
-                    buffer = Buffer.concat([buffer, new Buffer(data, 'hex')]);
-                    online = buffer.readUInt32LE(0);
-                    uptime = buffer.readUInt32LE(4);
-                    console.log(online);
-                    if (online != '') {
-                        var uptimems = Math.round(uptime * 1000);
-                        var datetimenow = Date.now();
-                        var uptimets = Math.round(datetimenow - uptimems);
-                        moment.locale('en');
-                        var day = moment(uptimets).toNow(true);
-                        message.reply("Server status: online.\r\nPlayers online: " + online + "\r\n" + day + " since last restart");
-                    }
-                    else {
-                        message.reply("Server status: offline!");
-                    }
-                });
-                client.on('error', function (err) {
-                    message.reply("Server status: offline!");
-                });
-                client.on('timeout', function (err) {
-                    message.reply("Server status: offline!");
-                });
             });
+            client.on('data', function (data) {
+                console.log('Received: ' + data);
+                var buffer = new Buffer('', 'hex');
+                buffer = Buffer.concat([buffer, new Buffer(data, 'hex')]);
+                online = buffer.readUInt32LE(0);
+                uptime = buffer.readUInt32LE(4);
+                console.log(online);
+                if (online != '') {
+                    var uptimems = Math.round(uptime * 1000);
+                    var datetimenow = Date.now();
+                    var uptimets = Math.round(datetimenow - uptimems);
+                    moment.locale('en');
+                    var day = moment(uptimets).toNow(true);
+                    msg = "Server status: online.\r\nPlayers online: " + online + "\r\n" + day + " since last restart";
+                    serverstatus = 1;
+                }
+                else {
+                    serverstatus = 0;
+                }
+                client.destroy();
+            });
+            client.on('error', function (err) {
+                serverstatus = 0;
+                client.destroy();
+            });
+            client.on('timeout', function (err) {
+                serverstatus = 0;
+                client.destroy();
+            });
+
+            client.on('close', function (){
+                if (serverstatus == 0) {
+                    message.reply("Server status: offline!");
+                } else
+                {
+                    message.reply(msg);
+                }
+            });
+
         }
     }
 
@@ -378,6 +395,51 @@ function handle_command(message, text) {
     }
 }
 
+
+function get_server_status() {
+    let serverstatus;
+    var client = new net.Socket();
+    client.setTimeout(1000);
+    client.connect(config.serverport, config.serverhost, function () {
+        console.log('Connected 1');
+        client.write(buff);
+    });
+    client.on('data', function (data) {
+        console.log('Received: ' + data);
+        var buffer = new Buffer('', 'hex');
+        buffer = Buffer.concat([buffer, new Buffer(data, 'hex')]);
+        online = buffer.readUInt32LE(0);
+        uptime = buffer.readUInt32LE(4);
+        console.log(online);
+        if (online != '') {
+            var uptimems = Math.round(uptime * 1000);
+            var datetimenow = Date.now();
+            var uptimets = Math.round(datetimenow - uptimems);
+            moment.locale('en');
+            var day = moment(uptimets).toNow(true);
+            serverstatus = 1;
+        }
+        else {
+            serverstatus = 0;
+        }
+        client.destroy();
+    });
+    client.on('error', function (err) {
+        serverstatus = 0;
+        client.destroy();
+    });
+    client.on('timeout', function (err) {
+        serverstatus = 0;
+        client.destroy();
+    });
+
+    client.on('close', function (){
+        srvstatus = serverstatus;
+    });
+
+}
+
+
 module.exports.sendevent = function (event) {
     console.log(events[event.name].logic);
     if (events[event.name].logic === "Announce") {
@@ -390,39 +452,48 @@ module.exports.sendsim = function (sim) {
     let status = "";
     let text = "";
     let activity = "";
-    if(sim > 0) {
-        status = "online";
+    if (srvstatus === 0) {
+        status = "dnd";
         activity = "watching";
-        text = "simulation, players - " + sim;
-        //channel.send("Simulation is on, players - " + sim);
-        //console.log("Simulation is on, players - " + sim);
-        bot.user.setPresence({ game: { name: text, type: activity}, status: status});
+        text = "server down!";
+        bot.user.setPresence({game: {name: text, type: activity}, status: status});
     } else {
-        status = "idle";
-        activity = "listening";
-        text = "!commands";
-        //channel.send("There is no simulation battles at the moment");
-        //console.log("There is no simulation at the moment");
-        bot.user.setPresence({ game: { name: text, type: activity}, status: status});
+        if (sim > 0) {
+            status = "online";
+            activity = "watching";
+            text = "simulation, players - " + sim;
+            //channel.send("Simulation is on, players - " + sim);
+            //console.log("Simulation is on, players - " + sim);
+            bot.user.setPresence({game: {name: text, type: activity}, status: status});
+        } else {
+            status = "idle";
+            activity = "listening";
+            text = "!commands";
+            //channel.send("There is no simulation battles at the moment");
+            //console.log("There is no simulation at the moment");
+            bot.user.setPresence({game: {name: text, type: activity}, status: status});
+        }
     }
 }
-
 
 
 module.exports.answersim = function (sim, channel) {
     let text = "";
-    if(sim > 0) {
-        text = "Simulation is on, players - " + sim;
-        console.log(channel);
+    if (srvstatus === 0) {
+        text = "There is no simulation at the moment";
         bot.channels.get(channel).send(text);
     } else {
-        text = "There is no simulation at the moment";
-        console.log(channel);
-        bot.channels.get(channel).send(text);
+        if (sim > 0) {
+            text = "Simulation is on, players - " + sim;
+            console.log(channel);
+            bot.channels.get(channel).send(text);
+        } else {
+            text = "There is no simulation at the moment";
+            console.log(channel);
+            bot.channels.get(channel).send(text);
+        }
     }
 }
-
-
 
 
 var poller = require('./poller.js');
@@ -432,8 +503,8 @@ bot.run = function (server_name, token) {
     bot.on("ready", () => {
         var server = bot.guilds.find("name", server_name);
         if (server === null) throw "Couldn't find server '" + server_name + "'";
-        bot.user.setActivity('Say !commands');
-        //bot.user.setPresence({ game: { name: '123', url: '456', type: ''}, status: 'idle' });
+        bot.user.setActivity('... loading ...');
+        bot.user.setPresence({ game: { name: '... loading ... ', type: 'watching'}, status: 'idle' });
         console.log("Connected!");
     });
 
@@ -464,9 +535,6 @@ bot.run = function (server_name, token) {
     setInterval(function () {
 
 
-
-
-
         requestasync({
             "method": "GET",
             "uri": simurl,
@@ -486,8 +554,12 @@ bot.run = function (server_name, token) {
     }, 30000);
 
 
+    setInterval(function () {
+
+    get_server_status();
+    }, 5000);
+
+
 }
 
 bot.run(serverName, botToken);
-
-

@@ -7,7 +7,7 @@ services:
       - db
     volumes:
       - ./config.json:/config.json
-    restart: on-failure:10
+    restart: unless-stopped
   db:
     image: mysql:5.7
     volumes:
@@ -15,4 +15,4 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: bot
-    restart: on-failure:10
+    restart: unless-stopped

@@ -125,20 +125,36 @@ module.exports.sim = function (sim, channel) {
             return new Promise((resolve, reject) => {
                 let context = [];
                 context.events = simjson;
+		//console.log(context.events);
                 let playerscount = 0;
+		let simdata = [];
                 simjson.forEach(function (row) {
-                    if (row[0].indexOf("Lobby") >= 0) {
-                        playerscount = playerscount + parseInt(row[2].substring(9));
-                    } else if (row[0].indexOf("Battle") >= 0) {
-                        playerscount = playerscount + parseInt(row[1].substring(9));
-                    }
+                        playerscount = parseInt(row[2].substring(9));
+			nickname = row[1];
+			simdata[simdata.length] = { nickname: nickname, players: playerscount};
                 });
-                console.log(playerscount);
+                //console.log(playerscount);
+		//console.log(simdata);
+		let uniquesimdata = Object.values(simdata.reduce((acc,cur)=>Object.assign(acc,{[cur.nickname]:cur}),{}));
+
+let initialValue = 0;
+let simplayers  = uniquesimdata.reduce(function (accumulator, currentValue) {
+    return accumulator + currentValue.players;
+},initialValue);
+
+//console.log(simplayers);
+
                 if (channel == null) {
-                    fonline.sendsim(playerscount);
+
+                    fonline.sendsim(simplayers);
                 }
                 else {
-                    fonline.answersim(playerscount, channel);
+
+fonline.answersim(simplayers, channel);
+
+
+
+
                 }
                 resolve(context);
             })
